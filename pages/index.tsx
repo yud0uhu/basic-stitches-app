@@ -1,53 +1,31 @@
-import Head from 'next/head'
-import StitchesLogo from '../components/StitchesLogo'
-import { styled } from '../stitches.config'
+import React, { useState, useEffect } from "react";
+import PhotoListComponent from "../components/PhotoListComponent";
 
-const Box = styled('div', {})
+const App = () => {
+  const [text, setText] = useState("");
+  const [photoList, setPhotoList] = useState([]);
 
-const Text = styled('p', {
-  fontFamily: '$system',
-  color: '$hiContrast',
-})
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/photos")
+      .then((res) => res.json())
+      .then(setPhotoList);
+  }, []);
 
-const Link = styled('a', {
-  fontFamily: '$system',
-  textDecoration: 'none',
-  color: '$purple600',
-})
-
-const Container = styled('div', {
-  marginX: 'auto',
-  paddingX: '$3',
-
-  variants: {
-    size: {
-      1: {
-        maxWidth: '300px',
-      },
-      2: {
-        maxWidth: '585px',
-      },
-      3: {
-        maxWidth: '865px',
-      },
-    },
-  },
-})
-
-export default function Home() {
   return (
-    <Box css={{ paddingY: '$6' }}>
-      <Head>
-        <title>Use Stitches with Next.js</title>
-      </Head>
-      <Container size={{ '@initial': '1', '@bp1': '2' }}>
-        <StitchesLogo />
-        <Text as="h1">Hello, from Stitches.</Text>
-        <Text>
-          For full documentation, visit{' '}
-          <Link href="https://stitches.dev">stitches.dev</Link>.
-        </Text>
-      </Container>
-    </Box>
-  )
-}
+    <div style={{ margin: "32px", textAlign: "center" }}>
+      <div>
+        <label htmlFor="text">[text]</label>
+        <input
+          id="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-around" }}>
+        <PhotoListComponent text={text} photoList={photoList} />
+      </div>
+    </div>
+  );
+};
+
+export default App;
